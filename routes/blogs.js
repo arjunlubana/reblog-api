@@ -4,7 +4,7 @@ const dbService = require("../db-service");
 const dbInstance = new dbService();
 
 // Get all blogs
-router.get("/blogs", (req, res) => {
+router.get("/", (req, res) => {
   const sequelize = dbInstance.init();
   const Blog = dbInstance.blogInit(sequelize);
   (async () => {
@@ -15,7 +15,7 @@ router.get("/blogs", (req, res) => {
 });
 
 // Get a particular blog
-router.get("/blogs/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const params = req.params;
   const sequelize = dbInstance.init();
   const Blog = dbInstance.blogInit(sequelize);
@@ -31,50 +31,73 @@ router.get("/blogs/:id", (req, res) => {
 });
 
 // Add a new blog
-router.post("/blogs/new", (req, res) => {
-  const params = req.params;
+router.post("/new", (req, res) => {
   const sequelize = dbInstance.init();
   const Blog = dbInstance.blogInit(sequelize);
   (async () => {
-    const data = await Blog.findAll({
-      where: {
-        id: params.id,
-      },
-    });
-    res.send(data);
-    sequelize.close();
+    try {
+      await Blog.create({
+        title: req.body.title,
+        data: req.body.data,
+        likes: req.body.likes,
+        comments: req.body.comments,
+      });
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
   })();
 });
 
-// Update
-router.put("/blogs/:id/update", (req, res) => {
+// Update A blog
+router.put("/:id/update", (req, res) => {
   const params = req.params;
   const sequelize = dbInstance.init();
   const Blog = dbInstance.blogInit(sequelize);
   (async () => {
-    const data = await Blog.findAll({
-      where: {
-        id: params.id,
-      },
-    });
-    res.send(data);
-    sequelize.close();
+    try {
+      await Blog.update({
+        title: req.body.title,
+        data: req.body.data,
+        likes: req.body.likes,
+        comments: req.body.comments,
+      }, {
+        where: {
+          id: params.id
+        }
+      });
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
   })();
 });
 
 // Delete a blog from the DB
-router.delete("/blogs/:id/delete", (req, res) => {
+router.delete("/:id/delete", (req, res) => {
   const params = req.params;
   const sequelize = dbInstance.init();
   const Blog = dbInstance.blogInit(sequelize);
   (async () => {
-    const data = await Blog.delete({
-      where: {
-        id: params.id,
-      },
-    });
-    res.send(data);
-    sequelize.close();
+    try {
+      await Blog.destroy({
+        where: {
+          id: params.id,
+        },
+      });
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
   })();
 });
 
