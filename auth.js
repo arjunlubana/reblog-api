@@ -76,10 +76,12 @@ router.post("/create-user", (req, res) => {
   // Instantiate a database Instance
   const sequelize = dbInstance.init();
   const User = dbInstance.userInit(sequelize);
-  // Hash the password and insert into the User table
+  // Generate a salt and a hash from the password
   hasher({ password: req.body.password }, async (err, pass, salt, hash) => {
     if (err) throw err;
     try {
+      // Insert the User data submitted 
+      // including the hash and the salt
       await User.create({
         username: req.body.username,
         email: req.body.email,
