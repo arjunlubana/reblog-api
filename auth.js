@@ -21,14 +21,27 @@ router.use(function (req, res, next) {
 
 // Authenticate using our plain-object database of doom!
 
-function authenticate(name, pass, fn) {
+async function authenticate(name, pass, fn) {
   if (!module.parent) console.log("authenticating %s:%s", name, pass);
-  var user = users[name];
+  const sequelize = dbInstance.init();
+  const User = dbInstance.userInit(sequelize);
   // query the db for the given username
-  if (!user) return fn(new Error("cannot find user"));
+  try {
+    var user = await User.findAll({
+      where: {
+        username: name,
+      },
+    });
+  } catch (error) {
+    return fn(error);
+  } finally {
+    sequelize.close();
+  }
+  if (user.length === 0) return fn(new Error("cannot find user"));
   // apply the same algorithm to the POSTed password, applying
   // the hash against the pass / salt, if there is a match we
   // found the user
+  user = user[0];
   hasher({ password: pass, salt: user.salt }, function (err, pass, salt, hash) {
     if (err) return fn(err);
     if (hash === user.hash) return fn(null, user);
@@ -55,18 +68,12 @@ router.post("/login", function (req, res) {
         // in the session store to be retrieved,
         // or in this case the entire user object
         req.session.user = user;
-        req.session.success =
-          "Authenticated as " +
-          user.name +
-          ' click to <a href="/logout">logout</a>. ' +
-          ' You may now access <a href="/restricted">/restricted</a>.';
+        req.session.success = "Authenticated as " + user.name;
         res.send("Logged In");
       });
     } else {
-      req.session.error =
-        "Authentication failed, please check your " +
-        " username and password." +
-        ' (use "tj" and "foobar")';
+      req.session.error = err;
+      console.log(err);
       res.send("Login first");
     }
   });
@@ -80,7 +87,7 @@ router.post("/create-user", (req, res) => {
   hasher({ password: req.body.password }, async (err, pass, salt, hash) => {
     if (err) throw err;
     try {
-      // Insert the User data submitted 
+      // Insert the User data submitted
       // including the hash and the salt
       await User.create({
         username: req.body.username,
@@ -93,7 +100,7 @@ router.post("/create-user", (req, res) => {
       res.sendStatus(500);
       console.log(error);
     } finally {
-      sequelize.close()
+      sequelize.close();
     }
   });
 });
