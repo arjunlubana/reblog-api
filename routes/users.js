@@ -3,8 +3,6 @@ const router = express.Router()
 const dbService = require("../db-service");
 const dbInstance = new dbService();
 
-// Auth
-
 // Query User
 
 router.get("/:id", (req, res) => {

@@ -73,7 +73,6 @@ router.post("/login", function (req, res) {
       });
     } else {
       req.session.error = err;
-      console.log(err);
       res.send("Login first");
     }
   });
@@ -87,18 +86,29 @@ router.post("/create-user", (req, res) => {
   hasher({ password: req.body.password }, async (err, pass, salt, hash) => {
     if (err) throw err;
     try {
+      // Check if a user with the username provided is found
+      let users = await User.findAll({
+        where: {
+          username: req.body.username,
+        },
+      });
       // Insert the User data submitted
       // including the hash and the salt
-      await User.create({
-        username: req.body.username,
-        email: req.body.email,
-        salt: salt,
-        hash: hash,
-      });
-      res.sendStatus(200);
+      // If the user with a unique username is not found
+      if(users.length == 0){
+        await User.create({
+          username: req.body.username,
+          email: req.body.email,
+          salt: salt,
+          hash: hash,
+        });
+        res.sendStatus(200);
+      }else{
+        res.sendStatus(200)
+        throw new Error("Username taken")
+      }
     } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
+      req.session.error = error
     } finally {
       sequelize.close();
     }
