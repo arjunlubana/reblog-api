@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-const hasher = require("pbkdf2-password")();
+const bcrypt = require("bcrypt");
 const router = require("express").Router();
 const dbService = require("./db-service");
 const dbInstance = new dbService();
@@ -42,9 +42,9 @@ async function authenticate(name, pass, fn) {
   // the hash against the pass / salt, if there is a match we
   // found the user
   user = user[0];
-  hasher({ password: pass, salt: user.salt }, function (err, pass, salt, hash) {
+  bcrypt.compare(pass, user.hash, function (err, result) {
     if (err) return fn(err);
-    if (hash === user.hash) return fn(null, user);
+    if (result) return fn(null, user);
     fn(new Error("invalid password"));
   });
 }
@@ -82,8 +82,8 @@ router.post("/create-user", (req, res) => {
   // Instantiate a database Instance
   const sequelize = dbInstance.init();
   const User = dbInstance.userInit(sequelize);
-  // Generate a salt and a hash from the password
-  hasher({ password: req.body.password }, async (err, pass, salt, hash) => {
+  // Generate a hash from the password
+  bcrypt.hash(req.body.password, 10 , async (err, passwordHash) => {
     if (err) throw err;
     try {
       // Check if a user with the username provided is found
@@ -92,15 +92,16 @@ router.post("/create-user", (req, res) => {
           username: req.body.username,
         },
       });
+
+      console.log(users);
       // Insert the User data submitted
-      // including the hash and the salt
-      // If the user with a unique username is not found
+      // including the hash if the user with a unique username is not found
       if(users.length == 0){
+        console.log("Creating User ...")
         await User.create({
           username: req.body.username,
           email: req.body.email,
-          salt: salt,
-          hash: hash,
+          hash: passwordHash,
         });
         res.sendStatus(200);
       }else{

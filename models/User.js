@@ -4,7 +4,6 @@ class User extends Model {
   static model = {
     username: DataTypes.TEXT,
     email: DataTypes.TEXT,
-    salt: DataTypes.TEXT,
     hash: DataTypes.TEXT
   };
 }

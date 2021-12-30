@@ -25,5 +25,5 @@ app.use("/api/users", usersRouter);
 app.use("/auth", authRouter);
 
 app.listen(process.env.PORT || 5000, () => {
-  console.log(`Listening to http://localhost:3000`);
+  console.log(`Listening to http://localhost:5000`);
 });
