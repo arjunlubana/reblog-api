@@ -1,23 +1,20 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 const dbService = require("../db-service");
-const dbInstance = new dbService();
 
 // Query User
 
 router.get("/:id", (req, res) => {
-  const params = req.params
-  const sequelize = dbInstance.init();
-  const User = dbInstance.userInit(sequelize);
+  const params = req.params;
   (async () => {
     const data = await User.findAll({
-      where:{
-        id: params.id
-      }
+      where: {
+        id: params.id,
+      },
     });
     res.send(data);
     sequelize.close();
   })();
 });
 
-module.exports = router
+module.exports = router;

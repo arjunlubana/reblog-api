@@ -1,48 +1,54 @@
 const express = require("express");
 const router = express.Router();
-const dbService = require("../db-service");
-const dbInstance = new dbService();
+const Blog = require("../models/Blog");
+const sequelize = require("../middleware/dbConnect")();
 
 // Get all blogs
 router.get("/", (req, res) => {
-  const sequelize = dbInstance.init();
-  const Blog = dbInstance.blogInit(sequelize);
   (async () => {
-    const data = await Blog.findAll();
-    res.send(data);
-    sequelize.close();
+    try {
+      const data = await Blog.findAll();
+      res.send(data);
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
   })();
 });
 
 // Get a particular blog
 router.get("/:id", (req, res) => {
   const params = req.params;
-  const sequelize = dbInstance.init();
-  const Blog = dbInstance.blogInit(sequelize);
   (async () => {
-    const data = await Blog.findAll({
-      where: {
-        id: params.id,
-      },
-    });
-    res.send(data);
-    sequelize.close();
+    try {
+      const data = await Blog.findByPk(params.id);
+      if (data === null) {
+        res.sendStatus(404);
+      } else {
+        res.send(data);
+      }
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
   })();
 });
 
 // Add a new blog
 router.post("/new", (req, res) => {
-  const sequelize = dbInstance.init();
-  const Blog = dbInstance.blogInit(sequelize);
   (async () => {
     try {
-      await Blog.create({
-        title: req.body.title,
-        data: req.body.data,
+      const blog = await Blog.create({
+        title: req.body.blogTitle,
+        body: req.body.blogBody,
         likes: req.body.likes,
         comments: req.body.comments,
       });
-      res.sendStatus(200);
+      res.send(blog);
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
@@ -55,21 +61,27 @@ router.post("/new", (req, res) => {
 // Update A blog
 router.put("/:id/update", (req, res) => {
   const params = req.params;
-  const sequelize = dbInstance.init();
-  const Blog = dbInstance.blogInit(sequelize);
   (async () => {
     try {
-      await Blog.update({
-        title: req.body.title,
-        data: req.body.data,
-        likes: req.body.likes,
-        comments: req.body.comments,
-      }, {
-        where: {
-          id: params.id
+      const update_status = await Blog.update(
+        {
+          title: req.body.blogTitle,
+          body: req.body.blogBody,
+          likes: req.body.likes,
+          comments: req.body.comments,
+        },
+        {
+          where: {
+            id: params.id,
+          },
         }
-      });
-      res.sendStatus(200);
+      );
+      if (update_status[0] === 0) {
+        res.sendStatus(404);
+      } else {
+        const newBlog = await Blog.findByPk(params.id);
+        res.send(newBlog);
+      }
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
@@ -82,8 +94,6 @@ router.put("/:id/update", (req, res) => {
 // Delete a blog from the DB
 router.delete("/:id/delete", (req, res) => {
   const params = req.params;
-  const sequelize = dbInstance.init();
-  const Blog = dbInstance.blogInit(sequelize);
   (async () => {
     try {
       await Blog.destroy({
