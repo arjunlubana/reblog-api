@@ -8,4 +8,10 @@ const Blog = sequelize.define("Blog", {
   comments: { type: DataTypes.JSON },
 });
 
+// Force Table Re-Creation
+(async () => {
+  // await User.sync({ force: true });
+  await Blog.sync({ force: true });
+})();
+
 module.exports = Blog;
