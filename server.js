@@ -8,6 +8,7 @@ const app = express();
 
 // middleware
 app.use(cors());
+app.use(express.static('public')) // Serving static files.
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(
@@ -20,6 +21,8 @@ app.use(
 app.use("/", indexRouter);
 app.use("/api/blogs", blogsRouter);
 
+
+// Start server
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Listening to http://localhost:5000`);
 });
