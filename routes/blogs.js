@@ -43,6 +43,7 @@ router.post("/new", (req, res) => {
   (async () => {
     try {
       const blog = await Blog.create({
+        cover_image: req.body.coverImage,
         title: req.body.blogTitle,
         body: req.body.blogBody,
         likes: req.body.likes,
@@ -65,6 +66,7 @@ router.put("/:id/update", (req, res) => {
     try {
       const update_status = await Blog.update(
         {
+          cover_image: req.body.coverImage,
           title: req.body.blogTitle,
           body: req.body.blogBody,
           likes: req.body.likes,
