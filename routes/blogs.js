@@ -50,13 +50,13 @@ function processMultiPartForm(req, blog_data) {
   form.on("field", function (name, value) {
     switch (name) {
       case "coverImage":
-        blog_data.coverImage = value;
+        blog_data.cover_image = value;
         break;
       case "blogTitle":
-        blog_data.blogTitle = JSON.parse(value);
+        blog_data.title = JSON.parse(value);
         break;
       case "blogBody":
-        blog_data.blogBody = JSON.parse(value);
+        blog_data.body = JSON.parse(value);
         break;
       case "likes":
         blog_data.likes = parseInt(value);
@@ -76,59 +76,44 @@ function processMultiPartForm(req, blog_data) {
 }
 // Add a new blog
 router.post("/new", (req, res) => {
-  const processedForm = processMultiPartForm(req, (blog_data = {}))
-  processedForm.on("close", async function () {
-    console.log(blog_data);
-    try {
-      const blog = await Blog.create({
-        cover_image: blog_data.coverImage,
-        title: blog_data.blogTitle,
-        body: blog_data.blogBody,
-        likes: blog_data.likes,
-        comments: blog_data.comments,
-      });
-      res.send("Blog Received");
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    } finally {
-      sequelize.close();
-    }
-  });
+  try {
+    const processedForm = processMultiPartForm(req, (blog_data = {}));
+    processedForm.on("close", async function () {
+      const blog = await Blog.create(blog_data);
+      res.send(blog);
+    });
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  } finally {
+    sequelize.close();
+  }
 });
 
 // Update A blog
 router.put("/:id/update", (req, res) => {
-  const params = req.params;
-  (async () => {
-    try {
-      const update_status = await Blog.update(
-        {
-          cover_image: req.body.coverImage,
-          title: req.body.blogTitle,
-          body: req.body.blogBody,
-          likes: req.body.likes,
-          comments: req.body.comments,
+  const blogId = parseInt(req.params.id);
+  try {
+    const processedForm = processMultiPartForm(req, (blog_data = {}));
+    processedForm.on("close", async function () {
+      const update_status = await Blog.update(blog_data, {
+        where: {
+          id: blogId,
         },
-        {
-          where: {
-            id: params.id,
-          },
-        }
-      );
+      });
       if (update_status[0] === 0) {
         res.sendStatus(404);
       } else {
-        const newBlog = await Blog.findByPk(params.id);
+        const newBlog = await Blog.findByPk(blogId);
         res.send(newBlog);
       }
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    } finally {
-      sequelize.close();
-    }
-  })();
+    });
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  } finally {
+    sequelize.close();
+  }
 });
 
 // Delete a blog from the DB
