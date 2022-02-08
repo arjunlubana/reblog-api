@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
 const sequelize = require("../middleware/dbConnect")();
+const multiparty = require("../multiparty/multiparty");
 
 // Get all blogs
 router.get("/", (req, res) => {
@@ -38,18 +39,33 @@ router.get("/:id", (req, res) => {
   })();
 });
 
+function processMultiPartForm(req) {
+  // create a form to begin parsing
+  let form = new multiparty.Form(uploadDir = "./public");
+  form.on("file", function (name, file) {
+    console.log(file);
+  });
+
+  form.on("field", function (name, field) {
+    console.log(field);
+  });
+
+  form.on("error", function (err) {
+    console.log("Error parsing form: " + err.stack);
+  });
+
+  form.on("close", function () {
+    console.log("Upload completed!");
+  });
+
+  form.parse(req);
+}
 // Add a new blog
 router.post("/new", (req, res) => {
   (async () => {
     try {
-      const blog = await Blog.create({
-        cover_image: req.body.coverImage,
-        title: req.body.blogTitle,
-        body: req.body.blogBody,
-        likes: req.body.likes,
-        comments: req.body.comments,
-      });
-      res.send(blog);
+      processMultiPartForm(req)
+      res.send("Blog Received")
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
