@@ -2,7 +2,7 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../middleware/dbConnect")();
 
 const Blog = sequelize.define("Blog", {
-  cover_image: { type: DataTypes.BLOB },
+  cover_image: { type: DataTypes.TEXT },
   title: { type: DataTypes.JSON },
   body: { type: DataTypes.JSON },
   likes: { type: DataTypes.INTEGER },

@@ -39,40 +39,62 @@ router.get("/:id", (req, res) => {
   })();
 });
 
-function processMultiPartForm(req) {
+function processMultiPartForm(req, blog_data) {
   // create a form to begin parsing
-  let form = new multiparty.Form(uploadDir = "./public");
-  form.on("file", function (name, file) {
-    console.log(file);
-  });
+  let form = new multiparty.Form();
+  form.uploadDir = "./public/images/blog";
 
-  form.on("field", function (name, field) {
-    console.log(field);
+  form.on("file", function (name, file) {
+    blog_data.coverImage = file.path.replace("public", "");
+  });
+  form.on("field", function (name, value) {
+    switch (name) {
+      case "coverImage":
+        blog_data.coverImage = value;
+        break;
+      case "blogTitle":
+        blog_data.blogTitle = JSON.parse(value);
+        break;
+      case "blogBody":
+        blog_data.blogBody = JSON.parse(value);
+        break;
+      case "likes":
+        blog_data.likes = parseInt(value);
+        break;
+      case "comments":
+        blog_data.comments = value;
+        break;
+    }
   });
 
   form.on("error", function (err) {
     console.log("Error parsing form: " + err.stack);
   });
 
-  form.on("close", function () {
-    console.log("Upload completed!");
-  });
-
   form.parse(req);
+  return form;
 }
 // Add a new blog
 router.post("/new", (req, res) => {
-  (async () => {
+  const processedForm = processMultiPartForm(req, (blog_data = {}))
+  processedForm.on("close", async function () {
+    console.log(blog_data);
     try {
-      processMultiPartForm(req)
-      res.send("Blog Received")
+      const blog = await Blog.create({
+        cover_image: blog_data.coverImage,
+        title: blog_data.blogTitle,
+        body: blog_data.blogBody,
+        likes: blog_data.likes,
+        comments: blog_data.comments,
+      });
+      res.send("Blog Received");
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
     } finally {
       sequelize.close();
     }
-  })();
+  });
 });
 
 // Update A blog
