@@ -8,7 +8,7 @@ const app = express();
 
 // middleware
 app.use(cors());
-app.use(express.static('public')) // Serving static files.
+app.use(express.static('uploads')) // Serving static files.
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(
