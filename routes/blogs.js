@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
 const sequelize = require("../middleware/dbConnect")();
-const multiparty = require("../multiparty/multiparty");
+const multer = require("multer");
+const upload = multer({ dest: "public/images/blog" });
 
 // Get all blogs
 router.get("/", (req, res) => {
@@ -39,49 +40,11 @@ router.get("/:id", (req, res) => {
   })();
 });
 
-function processMultiPartForm(req, blog_data) {
-  // create a form to begin parsing
-  let form = new multiparty.Form();
-  form.uploadDir = "./public/images/blog";
-
-  form.on("file", function (name, file) {
-    blog_data.coverImage = file.path.replace("public", "");
-  });
-  form.on("field", function (name, value) {
-    switch (name) {
-      case "coverImage":
-        blog_data.cover_image = value;
-        break;
-      case "blogTitle":
-        blog_data.title = JSON.parse(value);
-        break;
-      case "blogBody":
-        blog_data.body = JSON.parse(value);
-        break;
-      case "likes":
-        blog_data.likes = parseInt(value);
-        break;
-      case "comments":
-        blog_data.comments = value;
-        break;
-    }
-  });
-
-  form.on("error", function (err) {
-    console.log("Error parsing form: " + err.stack);
-  });
-
-  form.parse(req);
-  return form;
-}
 // Add a new blog
-router.post("/new", (req, res) => {
+router.post("/new", upload.single("cover"), async (req, res) => {
   try {
-    const processedForm = processMultiPartForm(req, (blog_data = {}));
-    processedForm.on("close", async function () {
-      const blog = await Blog.create(blog_data);
-      res.send(blog);
-    });
+    const blog = await Blog.create({ ...req.body, cover: req.file });
+    res.send(blog);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
@@ -91,23 +54,22 @@ router.post("/new", (req, res) => {
 });
 
 // Update A blog
-router.put("/:id/update", (req, res) => {
-  const blogId = parseInt(req.params.id);
+router.put("/:id/update", upload.single("cover"), async (req, res) => {
   try {
-    const processedForm = processMultiPartForm(req, (blog_data = {}));
-    processedForm.on("close", async function () {
-      const update_status = await Blog.update(blog_data, {
+    const update_status = await Blog.update(
+      {...req.body, cover: req.file},
+      {
         where: {
-          id: blogId,
+          id: req.params.id,
         },
-      });
-      if (update_status[0] === 0) {
-        res.sendStatus(404);
-      } else {
-        const newBlog = await Blog.findByPk(blogId);
-        res.send(newBlog);
       }
-    });
+    );
+    if (update_status[0] === 0) {
+      res.sendStatus(404);
+    } else {
+      const newBlog = await Blog.findByPk(req.params.id);
+      res.send(newBlog);
+    }
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
