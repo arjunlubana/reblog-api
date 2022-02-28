@@ -3,7 +3,7 @@ const router = express.Router();
 const Blog = require("../models/Blog");
 const sequelize = require("../middleware/dbConnect")();
 const multer = require("multer");
-const upload = multer({ dest: "public/images/blog" });
+const upload = multer({ dest: "uploads" });
 
 // Get all blogs
 router.get("/", (req, res) => {
