@@ -3,7 +3,17 @@ const router = express.Router();
 const Blog = require("../models/Blog");
 const sequelize = require("../middleware/dbConnect")();
 const multer = require("multer");
-const upload = multer({ dest: "uploads" });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const fileExtension = file.mimetype.split('/')[1]
+    cb(null, file.fieldname + "-" + uniqueSuffix + "." + fileExtension);
+  },
+});
+const upload = multer({ storage: storage });
 
 // Get all blogs
 router.get("/", (req, res) => {
@@ -57,7 +67,7 @@ router.post("/new", upload.single("cover"), async (req, res) => {
 router.put("/:id/update", upload.single("cover"), async (req, res) => {
   try {
     const update_status = await Blog.update(
-      {...req.body, cover: req.file},
+      { ...req.body, cover: req.file },
       {
         where: {
           id: req.params.id,
