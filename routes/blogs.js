@@ -34,6 +34,24 @@ router.get("/", (req, res) => {
   })();
 });
 
+router.get("/drafts", (req, res) => {
+  (async () => {
+    try {
+      const data = await Blog.findAll({
+        where: {
+          publish: false
+        }
+      });
+      res.send(data);
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
+  })();
+});
+
 // Get a particular blog
 router.get("/:id", (req, res) => {
   const params = req.params;
@@ -49,24 +67,6 @@ router.get("/:id", (req, res) => {
       } else {
         res.send(data);
       }
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    } finally {
-      sequelize.close();
-    }
-  })();
-});
-
-router.get("/drafts", (req, res) => {
-  (async () => {
-    try {
-      const data = await Blog.findAll({
-        where: {
-          publish: false
-        }
-      });
-      res.send(data);
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
