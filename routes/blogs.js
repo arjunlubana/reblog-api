@@ -19,7 +19,11 @@ const upload = multer({ storage: storage });
 router.get("/", (req, res) => {
   (async () => {
     try {
-      const data = await Blog.findAll();
+      const data = await Blog.findAll({
+        where: {
+          publish: true
+        }
+      });
       res.send(data);
     } catch (error) {
       res.sendStatus(500);
@@ -35,7 +39,53 @@ router.get("/:id", (req, res) => {
   const params = req.params;
   (async () => {
     try {
-      const data = await Blog.findByPk(params.id);
+      const data = await Blog.findByPk(params.id, {
+        where: {
+          publish: true
+        }
+      });
+      if (data === null) {
+        res.sendStatus(404);
+      } else {
+        res.send(data);
+      }
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
+  })();
+});
+
+router.get("/drafts", (req, res) => {
+  (async () => {
+    try {
+      const data = await Blog.findAll({
+        where: {
+          publish: false
+        }
+      });
+      res.send(data);
+    } catch (error) {
+      res.sendStatus(500);
+      console.log(error);
+    } finally {
+      sequelize.close();
+    }
+  })();
+});
+
+// Get a particular blog
+router.get("/drafts/:id", (req, res) => {
+  const params = req.params;
+  (async () => {
+    try {
+      const data = await Blog.findByPk(params.id,{
+        where: {
+          publish: false
+        }
+      });
       if (data === null) {
         res.sendStatus(404);
       } else {
@@ -64,7 +114,7 @@ router.post("/new", upload.single("cover"), async (req, res) => {
 });
 
 // Update A blog
-router.put("/:id/update", upload.single("cover"), async (req, res) => {
+router.put("/:id", upload.single("cover"), async (req, res) => {
   try {
     const update_status = await Blog.update(
       { ...req.body, cover: req.file },
@@ -89,7 +139,7 @@ router.put("/:id/update", upload.single("cover"), async (req, res) => {
 });
 
 // Delete a blog from the DB
-router.delete("/:id/delete", (req, res) => {
+router.delete("/:id", (req, res) => {
   const params = req.params;
   (async () => {
     try {

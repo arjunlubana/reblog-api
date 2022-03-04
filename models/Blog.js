@@ -7,6 +7,7 @@ const Blog = sequelize.define("Blog", {
   body: { type: DataTypes.JSON },
   likes: { type: DataTypes.INTEGER },
   comments: { type: DataTypes.JSON },
+  publish: {type: DataTypes.BOOLEAN, defaultValue: false }
 });
 
 // Force Table Re-Creation
