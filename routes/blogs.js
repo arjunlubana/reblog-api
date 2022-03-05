@@ -76,30 +76,6 @@ router.get("/:id", (req, res) => {
   })();
 });
 
-// Get a particular blog
-router.get("/drafts/:id", (req, res) => {
-  const params = req.params;
-  (async () => {
-    try {
-      const data = await Blog.findByPk(params.id,{
-        where: {
-          publish: false
-        }
-      });
-      if (data === null) {
-        res.sendStatus(404);
-      } else {
-        res.send(data);
-      }
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    } finally {
-      sequelize.close();
-    }
-  })();
-});
-
 // Add a new blog
 router.post("/new", upload.single("cover"), async (req, res) => {
   try {
