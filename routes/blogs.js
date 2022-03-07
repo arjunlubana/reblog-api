@@ -2,18 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
 const sequelize = require("../middleware/dbConnect")();
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const fileExtension = file.mimetype.split('/')[1]
-    cb(null, file.fieldname + "-" + uniqueSuffix + "." + fileExtension);
-  },
-});
-const upload = multer({ storage: storage });
 
 // Get all blogs
 router.get("/", (req, res) => {
@@ -21,8 +9,8 @@ router.get("/", (req, res) => {
     try {
       const data = await Blog.findAll({
         where: {
-          publish: true
-        }
+          publish: true,
+        },
       });
       res.send(data);
     } catch (error) {
@@ -39,8 +27,8 @@ router.get("/drafts", (req, res) => {
     try {
       const data = await Blog.findAll({
         where: {
-          publish: false
-        }
+          publish: false,
+        },
       });
       res.send(data);
     } catch (error) {
@@ -59,8 +47,8 @@ router.get("/:id", (req, res) => {
     try {
       const data = await Blog.findByPk(params.id, {
         where: {
-          publish: true
-        }
+          publish: true,
+        },
       });
       if (data === null) {
         res.sendStatus(404);
@@ -77,9 +65,9 @@ router.get("/:id", (req, res) => {
 });
 
 // Add a new blog
-router.post("/new", upload.single("cover"), async (req, res) => {
+router.post("/new", async (req, res) => {
   try {
-    const blog = await Blog.create({ ...req.body, cover: req.file });
+    const blog = await Blog.create(req.body);
     res.send(blog);
   } catch (error) {
     res.sendStatus(500);
@@ -90,16 +78,13 @@ router.post("/new", upload.single("cover"), async (req, res) => {
 });
 
 // Update A blog
-router.put("/:id", upload.single("cover"), async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    const update_status = await Blog.update(
-      { ...req.body, cover: req.file },
-      {
-        where: {
-          id: req.params.id,
-        },
-      }
-    );
+    const update_status = await Blog.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
     if (update_status[0] === 0) {
       res.sendStatus(404);
     } else {

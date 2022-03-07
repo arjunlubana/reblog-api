@@ -3,12 +3,12 @@ const session = require("express-session");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
 const blogsRouter = require("./routes/blogs");
+const filesRouter = require("./routes/files");
 
 const app = express();
 
 // middleware
 app.use(cors());
-app.use(express.static('uploads')) // Serving static files.
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(
@@ -20,7 +20,7 @@ app.use(
 );
 app.use("/", indexRouter);
 app.use("/api/blogs", blogsRouter);
-
+app.use("/api/files", filesRouter);
 
 // Start server
 app.listen(process.env.PORT || 5000, () => {
