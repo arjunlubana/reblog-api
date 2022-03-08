@@ -11,9 +11,9 @@ const Blog = sequelize.define("Blog", {
 });
 
 // Force Table Re-Creation
-(async () => {
-  // await User.sync({ force: true });
-  await Blog.sync({ force: true });
-})();
+// (async () => {
+//   // await User.sync({ force: true });
+//   await Blog.sync({ force: true });
+// })();
 
 module.exports = Blog;
