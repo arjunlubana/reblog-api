@@ -8,9 +8,11 @@ function connectToDatabase() {
     process.env.DB_PASSWORD,
     {
       host: process.env.DB_HOST,
-      dialect: "mariadb",
+      dialect: "postgres",
     }
   );
+
+  sequelize.sync({alter: true})
   return sequelize;
 }
 

@@ -10,10 +10,4 @@ const Blog = sequelize.define("Blog", {
   publish: {type: DataTypes.BOOLEAN, defaultValue: false }
 });
 
-// Force Table Re-Creation
-// (async () => {
-//   // await User.sync({ force: true });
-//   await Blog.sync({ force: true });
-// })();
-
 module.exports = Blog;
