@@ -4,7 +4,9 @@ const cors = require("cors");
 const indexRouter = require("./routes/index");
 const blogsRouter = require("./routes/blogs");
 const filesRouter = require("./routes/files");
-
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const app = express();
 
 // middleware
