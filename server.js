@@ -35,6 +35,6 @@ app.use("/api/blogs", blogsRouter);
 app.use("/api/files", filesRouter);
 
 // Start server
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Listening to http://localhost:5000`);
 });
