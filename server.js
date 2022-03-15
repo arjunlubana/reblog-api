@@ -1,7 +1,6 @@
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
-const indexRouter = require("./routes/index");
 const blogsRouter = require("./routes/blogs");
 const filesRouter = require("./routes/files");
 if (process.env.NODE_ENV !== 'production') {
