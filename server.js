@@ -32,9 +32,8 @@ app.use(
     secret: "shhhh, very secret",
   })
 );
-app.use("/", indexRouter);
-app.use("/api/blogs", blogsRouter);
-app.use("/api/files", filesRouter);
+app.use("/blogs", blogsRouter);
+app.use("/files", filesRouter);
 
 // Start server
 app.listen(process.env.PORT, () => {
