@@ -4,9 +4,15 @@ const fs = require("fs");
 const router = express.Router();
 const multer = require("multer");
 
-const uploadPath = path.join(__dirname, "../blog-uploads");
+const uploadPath = path.join(__dirname, "../uploads");
+const createPath = (folder) => {
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder);
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    createPath(uploadPath)
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
