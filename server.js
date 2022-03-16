@@ -2,7 +2,6 @@ const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
 const blogsRouter = require("./routes/blogs");
-const filesRouter = require("./routes/files");
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -32,7 +31,6 @@ app.use(
   })
 );
 app.use("/blogs", blogsRouter);
-app.use("/files", filesRouter);
 
 // Start server
 app.listen(process.env.PORT, () => {
