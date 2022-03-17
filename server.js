@@ -2,8 +2,8 @@ const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
 const blogsRouter = require("./routes/blogs");
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
 }
 const app = express();
 
@@ -13,10 +13,10 @@ app.use(
   express.raw({
     type: "text/plain",
     verify: function (req, res, buf, encoding) {
-      try{
-        buf.toString()
-      }catch(error){
-        throw(error)
+      try {
+        buf.toString();
+      } catch (error) {
+        throw error;
       }
     },
   })

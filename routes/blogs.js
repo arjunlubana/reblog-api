@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
-const upload = require("../middleware/upload")
+const upload = require("../middleware/upload");
+const cloudinary = require("cloudinary");
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 // Get all blogs
 router.get("/", async (req, res) => {
@@ -16,11 +20,9 @@ router.get("/", async (req, res) => {
     res.sendStatus(500);
     console.log(error);
   }
-})
-
+});
 
 router.get("/drafts", async (req, res) => {
-
   try {
     const data = await Blog.findAll({
       where: {
@@ -32,7 +34,7 @@ router.get("/drafts", async (req, res) => {
     res.sendStatus(500);
     console.log(error);
   }
-})
+});
 
 // Get a particular blog
 router.get("/:id", async (req, res) => {
@@ -42,12 +44,12 @@ router.get("/:id", async (req, res) => {
         publish: true,
       },
     });
-    !data ? res.sendStatus(404) : res.send(data)
+    !data ? res.sendStatus(404) : res.send(data);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
   }
-})
+});
 
 // Add a new blog
 router.post("/new", async (req, res) => {
@@ -60,15 +62,27 @@ router.post("/new", async (req, res) => {
   }
 });
 
-// Handle blog cover
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Handle blog cover file upload
 router.put("/:id", upload.single("cover"), async (req, res, next) => {
-  
-  next()
+  cloudinary.v2.uploader.upload(
+    req.file.path,
+    { folder: "Reblog/", public_id: req.file.filename },
+    function (error, result) {
+      req.body = { ...req.body, cover: result.secure_url };
+      next();
+    }
+  );
 });
 
 // Update A blog
 router.put("/:id", async (req, res) => {
-  console.log(req.body)
   try {
     await Blog.update(req.body, {
       where: {
@@ -98,6 +112,6 @@ router.delete("/:id", async (req, res) => {
     res.sendStatus(500);
     console.log(error);
   }
-})
+});
 
 module.exports = router;
