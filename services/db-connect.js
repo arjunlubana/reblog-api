@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+
 let db_options = {
   dialectOptions: {
     ssl: {
@@ -13,8 +14,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 function connectToDatabase() {
-  let sequelize = new Sequelize(process.env.DATABASE_URL, db_options);
-
+  let sequelize =  new Sequelize(process.env.DATABASE_URL, db_options);
   sequelize.sync({ alter: true });
   return sequelize;
 }
