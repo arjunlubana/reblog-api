@@ -1,6 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const Blog = require("../models/Blog");
+
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const fileExtension = file.mimetype.split("/")[1];
+    cb(null, file.fieldname + "-" + uniqueSuffix);
+  },
+});
+const upload = multer({ storage: storage });
 
 // Get all blogs
 router.get("/", async (req, res) => {
@@ -59,8 +69,15 @@ router.post("/new", async (req, res) => {
   }
 });
 
+// Handle blog cover
+router.put("/:id", upload.single("cover"), async (req, res, next) => {
+  
+  next()
+});
+
 // Update A blog
 router.put("/:id", async (req, res) => {
+  console.log(req.body)
   try {
     await Blog.update(req.body, {
       where: {
