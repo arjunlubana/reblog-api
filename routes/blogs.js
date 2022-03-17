@@ -18,43 +18,35 @@ router.get("/", async (req, res) => {
 })
 
 
-router.get("/drafts", (req, res) => {
-  (async () => {
-    try {
-      const data = await Blog.findAll({
-        where: {
-          publish: false,
-        },
-      });
-      res.send(data);
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    }
-  })();
-});
+router.get("/drafts", async (req, res) => {
+
+  try {
+    const data = await Blog.findAll({
+      where: {
+        publish: false,
+      },
+    });
+    res.send(data);
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  }
+})
 
 // Get a particular blog
-router.get("/:id", (req, res) => {
-  const params = req.params;
-  (async () => {
-    try {
-      const data = await Blog.findByPk(params.id, {
-        where: {
-          publish: true,
-        },
-      });
-      if (data === null) {
-        res.sendStatus(404);
-      } else {
-        res.send(data);
-      }
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    }
-  })();
-});
+router.get("/:id", async (req, res) => {
+  try {
+    const data = await Blog.findByPk(req.params.id, {
+      where: {
+        publish: true,
+      },
+    });
+    !data ? res.sendStatus(404) : res.send(data)
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  }
+})
 
 // Add a new blog
 router.post("/new", async (req, res) => {
@@ -70,17 +62,13 @@ router.post("/new", async (req, res) => {
 // Update A blog
 router.put("/:id", async (req, res) => {
   try {
-    const update_status = await Blog.update(req.body, {
+    await Blog.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
-    if (update_status[0] === 0) {
-      res.sendStatus(404);
-    } else {
-      const newBlog = await Blog.findByPk(req.params.id);
-      res.send(newBlog);
-    }
+    const updatedBlog = await Blog.findByPk(req.params.id);
+    res.send(updatedBlog);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
@@ -88,21 +76,20 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete a blog from the DB
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const params = req.params;
-  (async () => {
-    try {
-      await Blog.destroy({
-        where: {
-          id: params.id,
-        },
-      });
-      res.sendStatus(200);
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    }
-  })();
-});
+
+  try {
+    await Blog.destroy({
+      where: {
+        id: params.id,
+      },
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  }
+})
 
 module.exports = router;
