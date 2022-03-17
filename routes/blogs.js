@@ -71,14 +71,16 @@ cloudinary.config({
 
 // Handle blog cover file upload
 router.put("/:id", upload.single("cover"), async (req, res, next) => {
-  cloudinary.v2.uploader.upload(
-    req.file.path,
-    { folder: "Reblog/", public_id: req.file.filename },
-    function (error, result) {
-      req.body = { ...req.body, cover: result.secure_url };
-      next();
-    }
-  );
+  if (req.file) {
+    await cloudinary.v2.uploader.upload(
+      req.file.path,
+      { folder: "Reblog/", public_id: req.file.filename },
+      function (error, result) {
+        req.body = { ...req.body, cover: result.secure_url };
+      }
+    );
+  }
+  next();
 });
 
 // Update A blog
