@@ -1,26 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
-const sequelize = require("../middleware/dbConnect")();
 
 // Get all blogs
-router.get("/", (req, res) => {
-  (async () => {
-    try {
-      const data = await Blog.findAll({
-        where: {
-          publish: true,
-        },
-      });
-      res.send(data);
-    } catch (error) {
-      res.sendStatus(500);
-      console.log(error);
-    } finally {
-      sequelize.close();
-    }
-  })();
-});
+router.get("/", async (req, res) => {
+  try {
+    const data = await Blog.findAll({
+      where: {
+        publish: true,
+      },
+    });
+    res.send(data);
+  } catch (error) {
+    res.sendStatus(500);
+    console.log(error);
+  }
+})
+
 
 router.get("/drafts", (req, res) => {
   (async () => {
@@ -34,8 +30,6 @@ router.get("/drafts", (req, res) => {
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
-    } finally {
-      sequelize.close();
     }
   })();
 });
@@ -58,8 +52,6 @@ router.get("/:id", (req, res) => {
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
-    } finally {
-      sequelize.close();
     }
   })();
 });
@@ -72,8 +64,6 @@ router.post("/new", async (req, res) => {
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
-  } finally {
-    sequelize.close();
   }
 });
 
@@ -94,8 +84,6 @@ router.put("/:id", async (req, res) => {
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
-  } finally {
-    sequelize.close();
   }
 });
 
@@ -113,8 +101,6 @@ router.delete("/:id", (req, res) => {
     } catch (error) {
       res.sendStatus(500);
       console.log(error);
-    } finally {
-      sequelize.close();
     }
   })();
 });
