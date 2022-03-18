@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
-const connectToDatabase = require("../services/db-connect")
-const sequelize = connectToDatabase()
+
+const sequelize = require("../services/db-connect")
 
 const Blog = sequelize.define('Blog', {
   cover: { type: DataTypes.STRING, defaultValue: null },
