@@ -1,21 +1,14 @@
 const { Sequelize } = require("sequelize");
+const dbConfig = require("../config/db.config");
 
-let options = {};
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-} else {
-  options = {
-    logging: false,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  };
+const sequelize = new Sequelize(dbConfig.url, dbConfig.options);
+try {
+  sequelize.authenticate().then(() => {
+    sequelize.sync({ alter: true });
+    console.log("Database connection has been established successfully.");
+  });
+} catch (error) {
+  console.error("Unable to connect to the database:", error);
 }
-
-const sequelize = new Sequelize(process.env.POSTGRESQL_URL, options);
-sequelize.sync({ alter: true });
 
 module.exports = sequelize;
