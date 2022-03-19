@@ -1,5 +1,4 @@
 const cloudinary = require("cloudinary");
-const { response } = require("express");
 const {
   cloud_name,
   api_key,
@@ -26,4 +25,8 @@ async function cloudUpload(req, res, next) {
   next();
 }
 
-module.exports = cloudUpload;
+function cloudDelete(cover) {
+  const public_id = cover.match(/Reblog.\w*/);
+  cloudinary.v2.uploader.destroy(public_id);
+}
+module.exports = { cloudUpload, cloudDelete };

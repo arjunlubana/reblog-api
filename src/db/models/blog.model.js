@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../services/db.service");
+const db = require("../connector.db");
 
 const Blog = db.define("Blog", {
   cover: { type: DataTypes.STRING, defaultValue: null },
