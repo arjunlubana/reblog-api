@@ -4,41 +4,30 @@ const {
   getBlog,
   getBlogs,
   getDrafts,
-  createBlog,
+  postBlog,
   deleteBlog,
-  updateBlog,
+  patchBlog,
 } = require("../../controllers/blogs.controller");
 
-const fileUpload = require("../../middleware/file-upload");
-const cloudUpload = require("../../middleware/cloud-upload")
+const multerUpload = require("../../middleware/multer");
+const { cloudUpload } = require("../../middleware/cloudinary");
 
 // Get all blogs
-router.get("/all", (req, res) => {
-  getBlogs(req, res);
-});
+router.get("/all", getBlogs);
 
-router.get("/drafts", (req, res) => {
-  getDrafts(req, res);
-});
+router.get("/drafts", getDrafts);
 
-// Get a particular blog
-router.get("/:id", (req, res) => {
-  getBlog(req, res);
-});
+// Get a blog with id
+router.get("/:id", getBlog);
 
 // Add a new blog
-router.post("/new", (req, res) => {
-  createBlog(req, res);
-});
+router.post("/new", postBlog);
 
 // Update A blog
-router.put("/:id", fileUpload.single("cover"), cloudUpload, (req, res) => {
-  updateBlog(req, res);
-});
+let fileUpload = [multerUpload.single("cover"), cloudUpload];
+router.put("/:id", patchBlog);
 
 // Delete a blog from the DB
-router.delete("/:id", async (req, res) => {
-  deleteBlog(req, res);
-});
+router.delete("/:id", deleteBlog);
 
 module.exports = router;

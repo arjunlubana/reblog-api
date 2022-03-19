@@ -1,12 +1,16 @@
-const Blog = require("../models/blog.model");
+const {
+  fetchBlog,
+  fetchBlogs,
+  fetchDrafts,
+  createBlog,
+  updateBlog,
+  destroyBlog,
+} = require("../services/blogs.service");
 
 async function getBlog(req, res) {
+  const { id } = req.params;
   try {
-    const data = await Blog.findByPk(req.params.id, {
-      where: {
-        publish: true,
-      },
-    });
+    const data = await fetchBlog(id);
     !data ? res.sendStatus(404) : res.send(data);
   } catch (error) {
     res.sendStatus(500);
@@ -16,11 +20,7 @@ async function getBlog(req, res) {
 
 async function getBlogs(req, res) {
   try {
-    const data = await Blog.findAll({
-      where: {
-        publish: true,
-      },
-    });
+    const data = await fetchBlogs();
     res.send(data);
   } catch (error) {
     res.sendStatus(500);
@@ -29,44 +29,27 @@ async function getBlogs(req, res) {
 }
 async function getDrafts(req, res) {
   try {
-    const data = await Blog.findAll({
-      where: {
-        publish: false,
-      },
-    });
+    const data = await fetchDrafts();
     res.send(data);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
   }
 }
-async function createBlog(req, res) {
+async function postBlog(req, res) {
   try {
-    const blog = await Blog.create(req.body);
+    const blog = await createBlog();
     res.send(blog);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
   }
 }
-async function updateBlog(req, res) {
+async function patchBlog(req, res) {
+  const { id } = req.params;
   try {
-    let blog = await Blog.findByPk(req.params.id);
-    // Response if blog is not found
-    if (!blog) {
-      res.sendStatus(404);
-    } else {
-      // Delete existent cover on cloudinary
-      if (blog.cover && req.body.cover) {
-        const public_id = blog.cover.match(/Reblog.\w*/);
-        cloudinary.v2.uploader.destroy(public_id);
-      }
-      for (const key in req.body) {
-        blog[key] = req.body[key];
-      }
-      await blog.save();
-      res.send(blog);
-    }
+    const data = await updateBlog(id);
+    res.send(data);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
@@ -74,11 +57,9 @@ async function updateBlog(req, res) {
 }
 
 async function deleteBlog(req, res) {
+  const { id } = req.params.id;
   try {
-    const blog = await Blog.findByPk(req.params.id);
-    const public_id = blog.cover.match(/Reblog.\w*/);
-    cloudinary.v2.uploader.destroy(public_id);
-    await blog.destroy();
+    await destroyBlog(id);
     res.sendStatus(200);
   } catch (error) {
     res.sendStatus(500);
@@ -90,7 +71,7 @@ module.exports = {
   getBlog,
   getBlogs,
   getDrafts,
-  createBlog,
-  updateBlog,
+  postBlog,
+  patchBlog,
   deleteBlog,
 };
