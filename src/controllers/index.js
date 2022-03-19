@@ -3,7 +3,6 @@ const getBlogs = require("./get-blogs.controller");
 const getDrafts = require("./get-drafts.controller");
 const postBlog = require("./post-blog.controller");
 const deleteBlog = require("./delete-blog.controller");
-const uploadFile = require("./upload-file.controller");
 const updateBlog = require("./update-blog.controller");
 
 module.exports = {
@@ -12,6 +11,5 @@ module.exports = {
   getDrafts,
   postBlog,
   deleteBlog,
-  uploadFile,
   updateBlog,
 };
