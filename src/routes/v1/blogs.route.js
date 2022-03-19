@@ -23,7 +23,7 @@ router.get("/:id", getBlog);
 router.post("/new", postBlog);
 
 // Update A blog
-router.put("/:id", upload.single("cover"), patchBlog);
+router.patch("/:id", upload.single("cover"), patchBlog);
 
 // Delete a blog from the DB
 router.delete("/:id", deleteBlog);
