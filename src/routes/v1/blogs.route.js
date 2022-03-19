@@ -4,15 +4,13 @@ const {
   getBlog,
   getBlogs,
   getDrafts,
-  postBlog,
+  createBlog,
   deleteBlog,
-  uploadFile,
   updateBlog,
-} = require("../../controllers");
-const upload = require("../../middleware/upload");
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+} = require("../../controllers/blogs.controller");
+
+const fileUpload = require("../../middleware/file-upload");
+const cloudUpload = require("../../middleware/cloud-upload")
 
 // Get all blogs
 router.get("/all", (req, res) => {
@@ -30,17 +28,11 @@ router.get("/:id", (req, res) => {
 
 // Add a new blog
 router.post("/new", (req, res) => {
-  postBlog(req, res);
-});
-
-// Handle blog cover file upload
-router.put("/:id", upload.single("cover"), async (req, res, next) => {
-  uploadFile(req, res);
-  next();
+  createBlog(req, res);
 });
 
 // Update A blog
-router.put("/:id", async (req, res) => {
+router.put("/:id", fileUpload.single("cover"), cloudUpload, (req, res) => {
   updateBlog(req, res);
 });
 
