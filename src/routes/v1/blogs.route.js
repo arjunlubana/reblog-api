@@ -9,8 +9,7 @@ const {
   patchBlog,
 } = require("../../controllers/blogs.controller");
 
-const multerUpload = require("../../middleware/multer");
-const { cloudUpload } = require("../../middleware/cloudinary");
+const upload = require("../../middleware/multer.middleware");
 
 // Get all blogs
 router.get("/all", getBlogs);
@@ -24,8 +23,7 @@ router.get("/:id", getBlog);
 router.post("/new", postBlog);
 
 // Update A blog
-let fileUpload = [multerUpload.single("cover"), cloudUpload];
-router.put("/:id", patchBlog);
+router.put("/:id", upload.single("cover"), patchBlog);
 
 // Delete a blog from the DB
 router.delete("/:id", deleteBlog);
