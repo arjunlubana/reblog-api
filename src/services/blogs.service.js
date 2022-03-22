@@ -33,9 +33,9 @@ async function fetchDrafts() {
     throw new Error(error.message);
   }
 }
-async function createBlog() {
+async function createBlog(body) {
   try {
-    return await Blog.create(req.body);
+    return await Blog.create(body);
   } catch (error) {
     throw new Error(error.message);
   }
@@ -54,9 +54,8 @@ async function updateBlog(blog, update) {
     throw new Error(error.message);
   }
 }
-async function destroyBlog(id) {
+async function destroyBlog(blog) {
   try {
-    const blog = await Blog.findByPk(id);
     await blog.destroy();
   } catch (error) {
     throw new Error(error.message);

@@ -39,7 +39,7 @@ async function getDrafts(req, res) {
 }
 async function postBlog(req, res) {
   try {
-    const blog = await createBlog();
+    const blog = await createBlog(req.body);
     res.send(blog);
   } catch (error) {
     res.sendStatus(500);
@@ -54,7 +54,7 @@ async function patchBlog(req, res) {
     const update = await cloudUpload(body, file);
     const blog = await fetchBlog(id);
     if (blog.cover) {
-      cloudDelete(blog.cover);
+      await cloudDelete(blog.cover);
     }
     const updatedBlog = await updateBlog(blog, update);
     res.send(updatedBlog);
@@ -67,8 +67,14 @@ async function patchBlog(req, res) {
 async function deleteBlog(req, res) {
   const { id } = req.params;
   try {
-    await destroyBlog(id);
-    res.sendStatus(200);
+    const blog = await fetchBlog(id);
+    if (blog) {
+      await cloudDelete(blog.cover);
+      await destroyBlog(blog);
+      res.sendStatus(200);
+      return;
+    }
+    res.sendStatus(404);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
