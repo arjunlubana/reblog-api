@@ -27,12 +27,14 @@ async function cloudUpload(body, file) {
 }
 
 function cloudDelete(cover) {
-  try {
-    const public_id = cover.match(/Reblog.\w*/);
-    cloudinary.v2.uploader.destroy(public_id);
-    console.log(`File ${public_id} deleted successfully`);
-  } catch (error) {
-    console.log("Error deleting resource", error);
+  if (cover) {
+    try {
+      const public_id = cover.match(/Reblog.\w*/);
+      cloudinary.v2.uploader.destroy(public_id);
+      console.log(`File ${public_id} deleted successfully`);
+    } catch (error) {
+      console.log("Error deleting resource", error);
+    }
   }
 }
 module.exports = { cloudUpload, cloudDelete };
