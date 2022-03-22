@@ -40,12 +40,11 @@ async function createBlog() {
     throw new Error(error.message);
   }
 }
-async function updateBlog(id) {
+async function updateBlog(blog, update) {
   try {
-    let blog = await Blog.findByPk(id);
     if (blog) {
-      for (const key in req.body) {
-        blog[key] = req.body[key];
+      for (const key in update) {
+        blog[key] = update[key];
       }
       await blog.save();
       return blog;

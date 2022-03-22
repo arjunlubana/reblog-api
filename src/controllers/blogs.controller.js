@@ -6,6 +6,7 @@ const {
   updateBlog,
   destroyBlog,
 } = require("../services/blogs.service");
+const { cloudUpload, cloudDelete } = require("../services/cloudinary.service");
 
 async function getBlog(req, res) {
   const { id } = req.params;
@@ -47,9 +48,16 @@ async function postBlog(req, res) {
 }
 async function patchBlog(req, res) {
   const { id } = req.params;
+  const body = req.body;
+  const file = req.file;
   try {
-    const data = await updateBlog(id);
-    res.send(data);
+    const update = await cloudUpload(body, file);
+    const blog = await fetchBlog(id);
+    if (blog.cover) {
+      cloudDelete(blog.cover);
+    }
+    const updatedBlog = await updateBlog(blog, update);
+    res.send(updatedBlog);
   } catch (error) {
     res.sendStatus(500);
     console.log(error);
@@ -57,7 +65,7 @@ async function patchBlog(req, res) {
 }
 
 async function deleteBlog(req, res) {
-  const { id } = req.params.id;
+  const { id } = req.params;
   try {
     await destroyBlog(id);
     res.sendStatus(200);
