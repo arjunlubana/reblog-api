@@ -6,7 +6,13 @@ const {
 } = require("../config/cloudinary.config");
 
 cloudinary.config({ cloud_name, api_key, api_secret });
-
+/**
+ * Uploads media to cloudinary.
+ * Sets the blog cover to the media remote URL or null
+ * @param  {Object} body - Form data sent by the Client
+ * @param  {Object} file - File sent by the client
+ * @return {Object}      - Appended body with the cover property set to the file URL
+ */
 async function cloudUpload(body, file) {
   if (file) {
     const { path, fieldname, filename } = file;
@@ -15,12 +21,12 @@ async function cloudUpload(body, file) {
         folder: "Reblog/",
         public_id: filename,
       });
-      Object.defineProperty(body, fieldname, {
-        value: response.secure_url,
-      });
-      console.log("File uploaded to cloud");
+      body.cover = response.secure_url;
+      console.log("File uploaded to cloud", response.secure_url);
     } catch (error) {
-      console.log("Error: File upload failed\n", error);
+      // Prevents removing the cover image when upload fails
+      delete body.cover;
+      throw new Error("Failed to upload file");
     }
   }
   return body;

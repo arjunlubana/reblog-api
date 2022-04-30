@@ -1,14 +1,14 @@
 <h1 align="center">Reblog API</h1>
 
 
-A simple API for my [Reblog](https://github.com/ArjunLubana/reblog.git) React Web Application for compoding and publishing next generation blogs written in DraftJS.
+A simple API for my [Reblog](https://github.com/ArjunLubana/reblog.git) React Web Application for composing and publishing next generation blogs written in DraftJS.
 
 ---
 <h2 align="center">Stack</h2>
 
 > Express
 
-> MariaDB
+> Postgresql
 
 > Sequelize ORM.
 
