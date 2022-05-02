@@ -12,21 +12,15 @@ const {
 const upload = require("../../middleware/multer.middleware");
 const checkJwt = require("../../middleware/auth0.middleware");
 
-// Get all blogs
+// Public Endpoints
 router.get("/all", getBlogs);
-
 router.get("/drafts", getDrafts);
-
-// Get a blog with id
 router.get("/:id", getBlog);
 
-// Add a new blog
-router.post("/new", checkJwt, postBlog);
-
-// Update A blog
-router.patch("/:id", checkJwt, upload.single("cover"), patchBlog);
-
-// Delete a blog from the DB
-router.delete("/:id", checkJwt, deleteBlog);
+// Private Endpoints
+router.use(checkJwt);
+router.post("/new", postBlog);
+router.patch("/:id", upload.single("cover"), patchBlog);
+router.delete("/:id", deleteBlog);
 
 module.exports = router;
