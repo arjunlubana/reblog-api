@@ -4,7 +4,7 @@ const {
   createUser,
   updateUser,
   destroyUser,
-} = require("../services/users.service");
+} = require("../services/auth0.service");
 
 async function getUser(req, res, next) {
   const { id } = req.params;
