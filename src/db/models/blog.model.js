@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const db = require("../connector.db");
 
 const Blog = db.define("Blog", {
-  author: {type: DataTypes.STRING},
+  author: { type: DataTypes.JSON },
   cover: { type: DataTypes.STRING, defaultValue: null },
   title: { type: DataTypes.JSON },
   body: { type: DataTypes.JSON },
