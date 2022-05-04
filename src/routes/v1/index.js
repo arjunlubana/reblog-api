@@ -1,6 +1,6 @@
 const express = require("express");
 const blogsRoute = require("./blogs.route");
-const userRoute = require("./user.route");
+const usersRoute = require("./users.route");
 
 const router = express.Router();
 
@@ -10,28 +10,13 @@ const defaultRoutes = [
     route: blogsRoute,
   },
   {
-    path: "/user",
-    route: userRoute,
+    path: "/users",
+    route: usersRoute,
   },
 ];
-
-//   const devRoutes = [
-//     // routes available only in development mode
-//     {
-//       path: '/docs',
-//       route: docsRoute,
-//     },
-//   ];
 
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
-
-/* istanbul ignore next */
-// if (config.env === "development") {
-//   devRoutes.forEach((route) => {
-//     router.use(route.path, route.route);
-//   });
-// }
 
 module.exports = router;
