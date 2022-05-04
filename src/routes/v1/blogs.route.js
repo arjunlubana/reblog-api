@@ -7,7 +7,7 @@ const {
   postBlog,
   deleteBlog,
   patchBlog,
-} = require("../../controllers/blogs.controller");
+} = require("../../controllers/blogs");
 
 const upload = require("../../middleware/multer.middleware");
 const checkJwt = require("../../middleware/auth0.middleware");
