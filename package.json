@@ -8,6 +8,8 @@
     "dev": "nodemon ./src/server.js"
   },
   "dependencies": {
+    "auth0": "^2.40.0",
+    "axios": "^0.27.2",
     "cloudinary": "^1.28.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
