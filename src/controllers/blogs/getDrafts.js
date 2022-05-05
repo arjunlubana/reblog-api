@@ -5,8 +5,7 @@ async function getDrafts(req, res, next) {
     const data = await fetchDrafts();
     res.send(data);
   } catch (error) {
-    res.sendStatus(500);
-    console.log(error);
+    next(error);
   }
 }
 

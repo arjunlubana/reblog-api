@@ -14,8 +14,7 @@ async function deleteBlog(req, res, next) {
     }
     res.sendStatus(404);
   } catch (error) {
-    res.sendStatus(500);
-    console.log(error);
+    next(error);
   }
 }
 

@@ -5,8 +5,7 @@ async function getBlogs(req, res, next) {
     const data = await fetchBlogs();
     res.send(data);
   } catch (error) {
-    res.sendStatus(500);
-    console.log(error);
+    next(error);
   }
 }
 
