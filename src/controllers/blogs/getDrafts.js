@@ -4,7 +4,13 @@ async function getDrafts(req, res, next) {
   try {
     const data = await fetchDrafts();
     res.send(data);
-  } catch (error) {
+  } catch (err) {
+    let error = new ServerError(
+      "Service Unavailable",
+      503,
+      "There seems to be a problem with the server.",
+      err
+    );
     next(error);
   }
 }

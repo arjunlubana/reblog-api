@@ -1,13 +1,19 @@
 const { fetchBlog } = require("../../services/blogs.service");
+const ClientError = require("../../errors/clientError");
 
 async function getBlog(req, res, next) {
   const { id } = req.params;
   try {
     const data = await fetchBlog(id);
-    !data ? res.sendStatus(404) : res.send(data);
-  } catch (error) {
-    res.sendStatus(500);
-    console.log(error);
+    res.send(data);
+  } catch (err) {
+    let error = new ClientError(
+      "Resource Not Found",
+      404,
+      `The blog with the id ${id} does not exist.`,
+      err
+    );
+    next(error);
   }
 }
 

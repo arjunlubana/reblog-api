@@ -1,5 +1,6 @@
 const { createBlog } = require("../../services/blogs.service");
 const { fetchUser } = require("../../services/auth0.service");
+const ServerError = require("../../errors/serverError");
 
 async function postBlog(req, res, next) {
   try {
@@ -10,7 +11,13 @@ async function postBlog(req, res, next) {
     req.body.author = { user_id, name, nickname, email, picture };
     const blog = await createBlog(req.body);
     res.send(blog);
-  } catch (error) {
+  } catch (err) {
+    let error = new ServerError(
+      "Server Error",
+      503,
+      "Internal Server Error",
+      err
+    );
     next(error);
   }
 }
