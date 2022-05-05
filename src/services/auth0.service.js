@@ -9,7 +9,7 @@ var auth0 = new ManagementClient({
 
 async function fetchUser(id) {
   try {
-    const user = await auth0.getUser(id);
+    const user = await auth0.getUser({ id });
     return user;
   } catch (error) {
     throw new Error(error.message);
@@ -51,6 +51,5 @@ async function destroyUser(user) {
     throw new Error(error.message);
   }
 }
-
 
 module.exports = { fetchUser };
