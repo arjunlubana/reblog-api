@@ -13,7 +13,7 @@ const upload = require("../../middleware/multer.middleware");
 const checkJwt = require("../../middleware/auth0.middleware");
 
 // Public Endpoints
-router.get("/all", getBlogs);
+router.get("/", getBlogs);
 router.get("/drafts", getDrafts);
 router.get("/:id", getBlog);
 
