@@ -1,4 +1,4 @@
-const { updateBlog } = require("../../services/blogs.service");
+const { fetchBlog, updateBlog } = require("../../services/blogs.service");
 const { cloudUpload, cloudDelete } = require("../../services/cloudinary.service");
 
 async function patchBlog(req, res, next) {
