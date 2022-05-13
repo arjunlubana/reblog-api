@@ -1,4 +1,5 @@
 const Blog = require("../db/models/blog.model");
+const User = require("../db/models/user.model");
 
 async function fetchBlog(id) {
   try {
@@ -6,6 +7,7 @@ async function fetchBlog(id) {
       where: {
         publish: true,
       },
+      include: User
     });
   } catch (error) {
     throw new Error(error.message);
