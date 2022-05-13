@@ -1,5 +1,5 @@
 class ServerError extends Error {
-  constructor(type, status, message, error, ...params) {
+  constructor(error, ...params) {
     super(params)
     this.name = this.constructor.name
     this.type = 'Internal Server Error'

@@ -1,5 +1,5 @@
-const { Blog } = require('../db/models')
-const { ServerError } = require('../errors')
+const { Blog } = require('../../db/models')
+const { ServerError } = require('../../errors')
 
 async function fetchBlogs() {
   try {

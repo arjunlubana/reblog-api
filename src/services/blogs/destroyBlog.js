@@ -1,4 +1,4 @@
-const { ServerError } = require('../errors')
+const { ServerError } = require('../../errors')
 
 async function destroyBlog(blog) {
   try {

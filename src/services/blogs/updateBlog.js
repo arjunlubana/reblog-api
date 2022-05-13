@@ -1,15 +1,25 @@
-async function updateBlog(blog, update) {
+const { Blog } = require('../../db/models')
+const { ClientError, ServerError } = require('../../errors')
+
+async function updateBlog(id, update) {
   try {
-    if (blog) {
-      for (const key in update) {
-        blog[key] = update[key]
+    // Update the blog of given Id
+    await Blog.update(update, {
+      where: {
+        id
       }
-      await blog.save()
-      return blog
-    }
+    })
     return
   } catch (error) {
-    throw new Error(error.message)
+    if (error.name === 'SequelizeDatabaseError') {
+      throw new ClientError(
+        'Bad Request',
+        400,
+        `The blog ${id} update failed. Blog is unavailable`,
+        error
+      )
+    }
+    throw ServerError
   }
 }
 

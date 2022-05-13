@@ -1,4 +1,4 @@
-const { fetchBlogs } = require('../../services/blogs.service')
+const { fetchBlogs } = require('../../services/blogs')
 const ServerError = require('../../errors/serverError')
 
 async function getBlogs(req, res, next) {

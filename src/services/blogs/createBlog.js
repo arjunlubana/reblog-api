@@ -1,11 +1,11 @@
-const { Blog } = require('../db/models')
-const { ServerError, ClientError } = require('../errors')
+const { Blog } = require('../../db/models')
+const { ServerError, ClientError } = require('../../errors')
 
 async function createBlog(body) {
   try {
-    const blog = await Blog.create(body)
+    return await Blog.create(body)
   } catch (error) {
-    if (error.name === 'SequelizeDatabaseError') {
+    if (error.name === 'SequelizeForeignKeyConstraintError') {
       throw new ClientError(
         'Bad Request',
         400,
@@ -13,7 +13,7 @@ async function createBlog(body) {
         error
       )
     }
-    throw new ServerError()
+    throw new ServerError(error)
   }
 }
 

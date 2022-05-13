@@ -1,4 +1,4 @@
-const { fetchBlog, destroyBlog } = require('../../services/blogs.service')
+const { fetchBlog, destroyBlog } = require('../../services/blogs')
 const { cloudDelete } = require('../../services/cloudinary.service')
 
 async function deleteBlog(req, res, next) {

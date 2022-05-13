@@ -20,7 +20,9 @@ const Blog = db.define('Blog', {
 
 Blog.belongsTo(User)
 User.hasMany(Blog, {
-  foreignKey: 'authorId'
+  foreignKey: 'authorId',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
 })
 
 module.exports = Blog
