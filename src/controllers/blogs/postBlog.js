@@ -6,13 +6,7 @@ async function postBlog(req, res, next) {
     // req.body.author = req.auth.payload.sub;
     const blog = await createBlog(req.body);
     res.send(blog);
-  } catch (err) {
-    let error = new ServerError(
-      "Server Error",
-      503,
-      "Internal Server Error",
-      err
-    );
+  } catch (error) {
     next(error);
   }
 }
