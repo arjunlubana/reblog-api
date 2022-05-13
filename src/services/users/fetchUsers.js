@@ -1,12 +1,12 @@
-const User = require("../../db/models/user.model");
-const { ClientError, ServerError } = require("../../errors");
+const User = require('../../db/models/user.model')
+const { ServerError } = require('../../errors')
 
 async function fetchUsers() {
   try {
-    return await User.findAll();
+    return await User.findAll()
   } catch (error) {
-    throw new Error(error.message);
+    throw ServerError
   }
 }
 
-module.exports = fetchUsers;
+module.exports = fetchUsers

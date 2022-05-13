@@ -1,24 +1,24 @@
-const User = require("../../db/models/user.model");
-const { ClientError, ServerError } = require("../../errors");
+const User = require('../../db/models/user.model')
+const { ClientError } = require('../../errors')
 
 async function createUser(body) {
   try {
-    const user = await User.create(body);
-    return user;
+    const user = await User.create(body)
+    return user
   } catch (error) {
-    if (error.name === "SequelizeUniqueConstraintError") {
-      throw new ClientError("Bad Request", 400, `User already exists`, error);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      throw new ClientError('Bad Request', 400, `User ${body.id} already exists`, error)
     }
-    if (error.name === "SequelizeValidationError") {
+    if (error.name === 'SequelizeValidationError') {
       throw new ClientError(
-        "Bad Request",
+        'Bad Request',
         400,
-        `User id cannot be empty`,
+        `User ${body.id} cannot be empty`,
         error
-      );
+      )
     }
-    throw error;
+    throw error
   }
 }
 
-module.exports = createUser;
+module.exports = createUser

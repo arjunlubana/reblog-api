@@ -1,16 +1,16 @@
-const User = require("../../db/models/user.model");
-const { ClientError, ServerError } = require("../../errors");
+const User = require('../../db/models/user.model')
+const { ClientError } = require('../../errors')
 
 async function fetchUser(id) {
-  try {
-    const user = await User.findByPk(id);
-    if (!Boolean(user)) {
-      throw `The user ${id} does not exist.`;
-    }
-    return user;
-  } catch (error) {
-    throw new ClientError("Resource Not Found", 404, error);
+  const user = await User.findByPk(id)
+  if (!user) {
+    throw new ClientError(
+      'Resource Not Found',
+      404,
+      `The user ${id} does not exist.`
+    )
   }
+  return user
 }
 
-module.exports = fetchUser;
+module.exports = fetchUser

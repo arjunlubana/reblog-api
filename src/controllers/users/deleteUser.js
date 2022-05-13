@@ -1,13 +1,13 @@
-const { destroyUser } = require("../../services/users");
+const { destroyUser } = require('../../services/users')
 
 async function deleteUser(req, res, next) {
-  const { id } = req.params;
+  const { id } = req.params
   try {
-      const response = await destroyUser(id);
-      res.json(response)
+    const response = await destroyUser(id)
+    res.json(response)
   } catch (error) {
-    next(error);
+    next(error)
   }
 }
 
-module.exports = deleteUser;
+module.exports = deleteUser

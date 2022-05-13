@@ -1,9 +1,6 @@
-const { auth } = require("express-oauth2-jwt-bearer");
+const { auth } = require('express-oauth2-jwt-bearer')
+const { audience, issuerBaseURL } = require('../config/auth0.config')
 
-const checkJwt = auth({
-	audience: "https://reblog-api.herokuapp.com",
-	issuerBaseURL: "https://reblog.us.auth0.com/",
-	timeoutDuration: 30000
-});
+const checkJwt = auth({ audience, issuerBaseURL, timeoutDuration: 30000 })
 
-module.exports = checkJwt;
+module.exports = checkJwt

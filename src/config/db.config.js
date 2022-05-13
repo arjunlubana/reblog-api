@@ -1,6 +1,6 @@
-if(process.env.NODE_ENV !== "production"){
-  const dotenv = require("dotenv");
-  dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv')
+  dotenv.config()
 }
 
 module.exports = {
@@ -8,13 +8,13 @@ module.exports = {
   options: {
     logging: false,
     dialectOptions:
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === 'production'
         ? {
             ssl: {
               require: true,
-              rejectUnauthorized: false,
-            },
+              rejectUnauthorized: false
+            }
           }
-        : "",
-  },
-};
+        : ''
+  }
+}

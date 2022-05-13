@@ -1,17 +1,17 @@
-const { fetchUser, updateUser } = require("../../services/users");
+const { fetchUser, updateUser } = require('../../services/users')
 
 async function patchBlog(req, res, next) {
-  const { id } = req.params;
-  const body = req.body;
+  const { id } = req.params
+  const body = req.body
   try {
-    const user = await fetchUser(id);
+    const user = await fetchUser(id)
     const updatedUser = await updateUser(user, body)
-    if(updatedUser){
-     res.json(updatedUser)
+    if (updatedUser) {
+      res.json(updatedUser)
     }
   } catch (error) {
-    next(error);
+    next(error)
   }
 }
 
-module.exports = patchBlog;
+module.exports = patchBlog

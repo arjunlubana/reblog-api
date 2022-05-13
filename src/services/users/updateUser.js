@@ -1,18 +1,17 @@
-const User = require("../../db/models/user.model");
-const { ClientError, ServerError } = require("../../errors");
+const { ServerError } = require('../../errors')
 
 async function updateUser(user, body) {
   try {
     if (user) {
       for (const field in body) {
-        user[field] = body[field];
+        user[field] = body[field]
       }
-      await user.save();
-      return user;
+      await user.save()
+      return user
     }
   } catch (error) {
-    throw new Error(error.message);
+    throw ServerError
   }
 }
 
-module.exports = updateUser;
+module.exports = updateUser

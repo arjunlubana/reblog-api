@@ -1,26 +1,26 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const db = require("../connector.db");
-const User = require("./user.model");
+const { Sequelize, DataTypes } = require('sequelize')
+const db = require('../connector.db')
+const User = require('./user.model')
 
-const Blog = db.define("Blog", {
+const Blog = db.define('Blog', {
   id: {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
     allowNull: false,
-    unique: true,
+    unique: true
   },
   cover: { type: DataTypes.STRING, defaultValue: null },
   title: { type: DataTypes.JSON },
   body: { type: DataTypes.JSON },
   likes: { type: DataTypes.INTEGER },
   comments: { type: DataTypes.JSON },
-  publish: { type: DataTypes.BOOLEAN, defaultValue: false },
-});
+  publish: { type: DataTypes.BOOLEAN, defaultValue: false }
+})
 
-Blog.belongsTo(User);
+Blog.belongsTo(User)
 User.hasMany(Blog, {
-  foreignKey: "authorId",
-});
+  foreignKey: 'authorId'
+})
 
-module.exports = Blog;
+module.exports = Blog

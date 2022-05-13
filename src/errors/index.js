@@ -1,4 +1,4 @@
-const ServerError = require("./serverError");
-const ClientError = require("./clientError");
+const ServerError = require('./serverError')
+const ClientError = require('./clientError')
 
-module.exports = { ServerError, ClientError };
+module.exports = { ServerError, ClientError }

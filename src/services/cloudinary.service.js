@@ -1,11 +1,11 @@
-const cloudinary = require("cloudinary");
-const {
-  cloud_name,
-  api_key,
-  api_secret,
-} = require("../config/cloudinary.config");
+const cloudinary = require('cloudinary')
+const { cloudName, apiKey, apiSecret } = require('../config/cloudinary.config')
 
-cloudinary.config({ cloud_name, api_key, api_secret });
+cloudinary.config({
+  cloud_name: cloudName,
+  api_key: apiKey,
+  api_secret: apiSecret
+})
 /**
  * Uploads media to cloudinary.
  * Sets the blog cover to the media remote URL or null
@@ -15,32 +15,32 @@ cloudinary.config({ cloud_name, api_key, api_secret });
  */
 async function cloudUpload(body, file) {
   if (file) {
-    const { path, fieldname, filename } = file;
+    const { path, filename } = file
     try {
       const response = await cloudinary.v2.uploader.upload(path, {
-        folder: "Reblog/",
-        public_id: filename,
-      });
-      body.cover = response.secure_url;
-      console.log("File uploaded to cloud", response.secure_url);
+        folder: 'Reblog/',
+        public_id: filename
+      })
+      body.cover = response.secure_url
+      console.log('File uploaded to cloud', response.secure_url)
     } catch (error) {
       // Prevents removing the cover image when upload fails
-      delete body.cover;
-      throw new Error("Failed to upload file");
+      delete body.cover
+      throw new Error('Failed to upload file')
     }
   }
-  return body;
+  return body
 }
 
 function cloudDelete(cover) {
   if (cover) {
     try {
-      const public_id = cover.match(/Reblog.\w*/);
-      cloudinary.v2.uploader.destroy(public_id);
-      console.log(`File ${public_id} deleted successfully`);
+      const publicId = cover.match(/Reblog.\w*/)
+      cloudinary.v2.uploader.destroy(publicId)
+      console.log(`File ${publicId} deleted successfully`)
     } catch (error) {
-      console.log("Error deleting resource", error);
+      console.log('Error deleting resource', error)
     }
   }
 }
-module.exports = { cloudUpload, cloudDelete };
+module.exports = { cloudUpload, cloudDelete }

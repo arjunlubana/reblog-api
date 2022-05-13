@@ -1,13 +1,13 @@
-const { fetchUser } = require("../../services/users");
+const { fetchUser } = require('../../services/users')
 
 async function getUser(req, res, next) {
-  const { id } = req.params;
+  const { id } = req.params
   try {
-    const user = await fetchUser(id);
+    const user = await fetchUser(id)
     res.json(user)
   } catch (error) {
-    next(error);
+    next(error)
   }
 }
 
-module.exports = getUser;
+module.exports = getUser
