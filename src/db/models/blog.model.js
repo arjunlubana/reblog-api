@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../connector.db");
+const User = require("./user.model");
 
 const Blog = db.define("Blog", {
   id: {
@@ -9,13 +10,17 @@ const Blog = db.define("Blog", {
     allowNull: false,
     unique: true,
   },
-  author: { type: DataTypes.JSON },
   cover: { type: DataTypes.STRING, defaultValue: null },
   title: { type: DataTypes.JSON },
   body: { type: DataTypes.JSON },
   likes: { type: DataTypes.INTEGER },
   comments: { type: DataTypes.JSON },
   publish: { type: DataTypes.BOOLEAN, defaultValue: false },
+});
+
+Blog.belongsTo(User);
+User.hasMany(Blog, {
+  foreignKey: "authorId",
 });
 
 module.exports = Blog;

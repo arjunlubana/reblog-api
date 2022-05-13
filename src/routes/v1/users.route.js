@@ -7,7 +7,7 @@ const {
   postUser,
   patchUser,
   deleteUser,
-} = require("../../controllers/users.controller");
+} = require("../../controllers/users");
 
 const checkJwt = require("../../middleware/auth0.middleware");
 
@@ -16,7 +16,7 @@ router.get("/all", getUsers);
 router.get("/:id", getUser);
 
 // Private Endpoints
-router.use(checkJwt);
+// router.use(checkJwt);
 router.post("/new", postUser);
 router.patch("/:id", patchUser);
 router.delete("/:id", deleteUser);
