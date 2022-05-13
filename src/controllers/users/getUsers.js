@@ -1,17 +1,10 @@
-const { fetchUsers } = require("../../services/users.service");
-const ServerError = require("../../errors/serverError");
+const { fetchUsers } = require("../../services/users");
 
 async function getUsers(req, res, next) {
   try {
     const data = await fetchUsers();
     res.send(data);
-  } catch (err) {
-    let error = new ServerError(
-      "Service Unavailable",
-      503,
-      "There seems to be a problem with the server.",
-      err
-    );
+  } catch (error) {
     next(error);
   }
 }

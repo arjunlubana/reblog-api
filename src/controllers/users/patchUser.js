@@ -1,4 +1,4 @@
-const { fetchUser, updateUser } = require("../../services/users.service");
+const { fetchUser, updateUser } = require("../../services/users");
 
 async function patchBlog(req, res, next) {
   const { id } = req.params;

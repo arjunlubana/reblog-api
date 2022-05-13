@@ -1,4 +1,4 @@
-const { fetchUser } = require("../../services/users.service");
+const { fetchUser } = require("../../services/users");
 
 async function getUser(req, res, next) {
   const { id } = req.params;
