@@ -1,5 +1,7 @@
 const Blog = require("../db/models/blog.model");
 const User = require("../db/models/user.model");
+const ClientError = require("../errors/clientError");
+const ServerError = require("../errors/serverError");
 
 async function fetchBlog(id) {
   try {
@@ -7,7 +9,7 @@ async function fetchBlog(id) {
       where: {
         publish: true,
       },
-      include: User
+      include: User,
     });
   } catch (error) {
     throw new Error(error.message);
@@ -37,9 +39,12 @@ async function fetchDrafts() {
 }
 async function createBlog(body) {
   try {
-    return await Blog.create(body);
+    const blog = await Blog.create(body);
   } catch (error) {
-    throw new Error(error.message);
+    if (error.name === "SequelizeDatabaseError") {
+      throw new ClientError("Bad Request", 400, "Sign up to create a blog post", error);
+    }
+    throw new ServerError;
   }
 }
 async function updateBlog(blog, update) {
