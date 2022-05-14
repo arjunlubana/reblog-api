@@ -18,7 +18,11 @@ const Blog = db.define('Blog', {
   publish: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
-Blog.belongsTo(User)
+Blog.belongsTo(User, {
+  foreignKey: 'authorId',
+  onDelete: 'RESTRICT',
+  onUpdate: 'RESTRICT'
+})
 User.hasMany(Blog, {
   foreignKey: 'authorId',
   onDelete: 'CASCADE',

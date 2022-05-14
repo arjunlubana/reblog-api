@@ -1,18 +1,11 @@
-const { fetchBlog, destroyBlog } = require('../../services/blogs')
-const { cloudDelete } = require('../../services/cloudinary.service')
+const { destroyBlog } = require('../../services/blogs')
 
 async function deleteBlog(req, res, next) {
   const { id } = req.params
   try {
-    const blog = await fetchBlog(id)
     // Only delete if the user is the creator of the resource.
-    if (blog && blog.author === req.auth.payload.sub) {
-      await cloudDelete(blog.cover)
-      await destroyBlog(blog)
-      res.sendStatus(200)
-      return
-    }
-    res.sendStatus(404)
+    await destroyBlog(id)
+    res.json({ message: `Blog ${id} deleted`, status: 200 })
   } catch (error) {
     next(error)
   }
