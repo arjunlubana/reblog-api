@@ -1,4 +1,4 @@
-const User = require('../../db/models/user.model')
+const { User } = require('../../db/models')
 const { ClientError } = require('../../errors')
 
 async function fetchUser(id) {
