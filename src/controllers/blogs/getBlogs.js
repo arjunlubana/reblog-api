@@ -1,17 +1,10 @@
 const { fetchBlogs } = require('../../services/blogs')
-const ServerError = require('../../errors/serverError')
 
 async function getBlogs(req, res, next) {
   try {
     const data = await fetchBlogs()
-    res.send(data)
-  } catch (err) {
-    let error = new ServerError(
-      'Service Unavailable',
-      503,
-      'There seems to be a problem with the server.',
-      err
-    )
+    res.json(data)
+  } catch (error) {
     next(error)
   }
 }
