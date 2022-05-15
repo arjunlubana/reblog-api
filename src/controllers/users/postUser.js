@@ -4,7 +4,7 @@ async function postUser(req, res, next) {
   const body = req.body
   try {
     const user = await createUser(body)
-    res.send(user)
+    res.json(user)
   } catch (error) {
     next(error)
   }

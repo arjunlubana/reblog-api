@@ -4,7 +4,7 @@ async function getBlog(req, res, next) {
   const { id } = req.params
   try {
     const blog = await fetchBlog(id)
-    res.send(blog)
+    res.json(blog)
   } catch (error) {
     next(error)
   }

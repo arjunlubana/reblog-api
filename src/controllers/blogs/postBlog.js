@@ -4,7 +4,7 @@ async function postBlog(req, res, next) {
   try {
     // req.body.author = req.auth.payload.sub;
     const blog = await createBlog(req.body)
-    res.send(blog)
+    res.json(blog)
   } catch (error) {
     next(error)
   }
