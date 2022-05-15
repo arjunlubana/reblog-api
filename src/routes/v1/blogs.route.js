@@ -14,11 +14,11 @@ const upload = require('../../middleware/multer.middleware')
 
 // Public Endpoints
 router.get('/', getBlogs)
-router.get('/drafts', getDrafts)
 router.get('/:id', getBlog)
 
 // Private Endpoints
 // router.use(checkJwt);
+router.get('/drafts', getDrafts)
 router.post('/new', postBlog)
 router.patch('/:id', upload.single('cover'), patchBlog)
 router.delete('/:id', deleteBlog)
