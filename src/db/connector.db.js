@@ -4,7 +4,7 @@ const { url, options } = require('../config/db.config')
 const db = new Sequelize(url, options)
 try {
   db.authenticate().then(() => {
-    db.sync({ alter: true })
+    db.sync({ force: true })
     console.log('Database connection has been established successfully.')
   })
 } catch (error) {
