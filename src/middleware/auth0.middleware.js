@@ -1,6 +1,17 @@
-const { auth } = require('express-oauth2-jwt-bearer')
-const { audience, issuerBaseURL } = require('../config/auth0.config')
+const { expressjwt } = require('express-jwt')
+const jwks = require('jwks-rsa')
+const { audience, issuer } = require('../config/auth0.config')
 
-const checkJwt = auth({ audience, issuerBaseURL, timeoutDuration: 30000 })
+var checkJwt = expressjwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://reblog.us.auth0.com/.well-known/jwks.json'
+  }),
+  audience,
+  issuer,
+  algorithms: ['RS256']
+})
 
 module.exports = checkJwt

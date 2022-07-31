@@ -1,5 +1,5 @@
 function failSafeHandler(error, req, res, next) {
-  res.status(error.status).json({
+  res.status(500).json({
     error: {
       type: error.type || error.code,
       status: error.status,

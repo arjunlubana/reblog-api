@@ -9,18 +9,17 @@ const {
   patchBlog
 } = require('../../controllers/blogs')
 
-const upload = require('../../middleware/multer.middleware')
-// const checkJwt = require('../../middleware/auth0.middleware')
+const checkJwt = require('../../middleware/auth0.middleware')
 
 // Public Endpoints
 router.get('/', getBlogs)
-router.get('/drafts', getDrafts)
+router.get('/drafts',checkJwt, getDrafts)
 router.get('/:id', getBlog)
 
+router.use(checkJwt);
 // Private Endpoints
-// router.use(checkJwt);
 router.post('/new', postBlog)
-router.patch('/:id', upload.single('cover'), patchBlog)
+router.patch('/:id', patchBlog)
 router.delete('/:id', deleteBlog)
 
 module.exports = router
