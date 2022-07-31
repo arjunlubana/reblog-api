@@ -9,14 +9,14 @@ const {
   patchBlog
 } = require('../../controllers/blogs')
 
-const checkJwt = require('../../middleware/auth0.middleware')
+const checkJwt = require('../../middleware/jwt.middleware')
 
 // Public Endpoints
 router.get('/', getBlogs)
-router.get('/drafts',checkJwt, getDrafts)
+router.get('/drafts', checkJwt, getDrafts)
 router.get('/:id', getBlog)
 
-router.use(checkJwt);
+router.use(checkJwt)
 // Private Endpoints
 router.post('/new', postBlog)
 router.patch('/:id', patchBlog)

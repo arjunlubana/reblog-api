@@ -15,18 +15,8 @@ const Blog = db.define('Blog', {
   body: { type: DataTypes.JSON },
   likes: { type: DataTypes.INTEGER },
   comments: { type: DataTypes.JSON },
-  publish: { type: DataTypes.BOOLEAN, defaultValue: false }
-})
-
-Blog.belongsTo(User, {
-  foreignKey: 'authorId',
-  onDelete: 'RESTRICT',
-  onUpdate: 'RESTRICT'
-})
-User.hasMany(Blog, {
-  foreignKey: 'authorId',
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE'
+  publish: { type: DataTypes.BOOLEAN, defaultValue: false },
+  authorId: { type: DataTypes.STRING, allowNull: false }
 })
 
 module.exports = Blog

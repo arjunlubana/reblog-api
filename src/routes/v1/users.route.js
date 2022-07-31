@@ -9,14 +9,14 @@ const {
   deleteUser
 } = require('../../controllers/users')
 
-const checkJwt = require('../../middleware/auth0.middleware')
+const { checkJwt } = require('../../middleware/auth0.middleware')
 
 // Public Endpoints
 router.get('/all', getUsers)
 router.get('/:id', getUser)
 
 // Private Endpoints
-router.use(checkJwt);
+router.use(checkJwt)
 router.post('/new', postUser)
 router.patch('/:id', patchUser)
 router.delete('/:id', deleteUser)
